@@ -1,7 +1,15 @@
 from pydantic_settings import BaseSettings
+from pathlib import Path
 from dotenv import load_dotenv
+import os
 
-load_dotenv()
+# environments dev, stg, prod
+ENV = os.getenv("ENVIRONMENT", "stg")
+
+if ENV != "prod":
+    env_path = Path(f".env.{ENV}")
+    load_dotenv(dotenv_path=Path(env_path))
+    print(f"[INFO] Loaded env file: {env_path}")
 
 
 class Settings(BaseSettings):
@@ -12,9 +20,7 @@ class Settings(BaseSettings):
     db_username: str
     whatsapp_authorization_token: str
     whatsapp_verify_token: str
-
-    class config:
-        env_file = ".env"
+    environment: str = ENV
 
 
 settings = Settings()  # type: ignore

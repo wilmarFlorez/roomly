@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 # environments dev, stg, prod
-ENV = os.getenv("ENVIRONMENT", "stg")
+ENV = os.getenv("ENVIRONMENT", "dev")
 
 if ENV != "prod":
     env_path = Path(f".env.{ENV}")
@@ -18,9 +18,10 @@ class Settings(BaseSettings):
     db_password: str
     db_name: str
     db_username: str
-    whatsapp_authorization_token: str
     whatsapp_verify_token: str
     environment: str = ENV
+    whatsapp_access_token: str
+    whatsapp_phone_number_id: str
 
 
 settings = Settings()  # type: ignore

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Response
 from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.services.whatsapp import proccess_message
+from app.services.whatsapp_client import send_whatsapp_message
 
 router = APIRouter()
 
@@ -26,4 +27,23 @@ async def verify_webhook(req: Request):
 async def receive_messages(req: Request):
     data = await req.json()
     print("Data from whatsapp", data)
+
+    try:
+        entry = data["entry"][0]
+        changes = entry["changes"][0]
+        value = changes["value"]
+        messages = value.get("messages", [])
+
+        if messages:
+            message = messages[0]
+            from_number = message["from"]
+            text = message["text"]["body"].strip().lower()
+
+            response_text = proccess_message(text, from_number)
+            await send_whatsapp_message(from_number, response_text)
+            print("TEXT", text)
+
+    except Exception as e:
+        print("[ERROR] procesando el mensaje: ", e)
+
     return {"status": "ok"}

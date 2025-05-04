@@ -1,22 +1,39 @@
-# import os
-# import request
-# import json
-# from ..core.config import settings
+user_states = {}
 
-# def send_whatsapp_message(data):
-#   url = "https://graph.facebook.com/v19.0/382988971554015/messages"
-#   headers = {
-#     'Content-Type': 'application/json',
-#     'Authorization': f'Bearer {settings.whatsapp_authorization_token}'
-#   }
 
-#   try:
-#     response = requests.post(url, headers=headers, json=data)
-#     response.raise_for_status()
-#     print(response.text)
-#   except requests.exceptions.RequestException as e:
-#     print(f'Error whatsapp service {e}')
-    
-    
-def proccess_message():
-  print("Procesando mensaje...")
+ACCOMMODATION = [
+    {
+        "id": 1,
+        "name": "Hotel Playa Bonita",
+        "city": "Cartagena",
+    },
+    {
+        "id": 2,
+        "name": "Glamping Montaña Mágica",
+        "city": "Medellín",
+    },
+    {
+        "id": 3,
+        "name": "Camping Aventura Verde",
+        "city": "Cali",
+    },
+]
+
+
+def proccess_message(text: str, phone: str) -> str:
+    user_state = user_states.get(phone, {})
+
+    if "step" not in user_state:
+        user_state["step"] = 1
+        user_states[phone] = user_state
+        return "Hola para ayudarte con tu reserva, dime ¿a qué ciudad deseas viajar?"
+    elif user_state["step"] == 1:
+        user_state["destino"] = text
+        user_state["step"] = 2
+        return "Perfecto, ¿Para qué fechas estás buscando alojamiento?"
+    elif user_state["step"] == 2:
+        user_state["fechas"] = text
+        user_state["step"] = 3
+        return "¿Cuántas personas viajarán?"
+
+    return "No entendí. Por favor intenta de nuevo."

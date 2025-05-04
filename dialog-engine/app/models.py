@@ -1,5 +1,3 @@
-# Este es un ejemplo de como crear un modelo
-
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Text, Enum
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declarative_base

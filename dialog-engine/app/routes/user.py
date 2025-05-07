@@ -24,12 +24,12 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 
-@router.get("/users/{id}", response_model=schemas.UserResponse)
-def get_user(id: int, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.id == id).first()
+@router.get("/{phone_id}", response_model=schemas.UserResponse)
+def get_user(phone_id: str, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.phone_number_id == phone_id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with id: {id} does not exist",
+            detail=f"User with id: {phone_id} does not exist",
         )
     return user

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Float, Text, Enum
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.expression import text
-from .database import Base
+from ..database import Base
 import datetime
 import enum
 
@@ -17,9 +17,12 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=True)
-    phone: Mapped[str] = mapped_column(String(50), unique=True)
+    phone_number: Mapped[str] = mapped_column(String(50), unique=True)
+    phone_number_id: Mapped[str] = mapped_column(String(50), unique=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=True)
-
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        default=lambda: datetime.datetime.now(datetime.timezone.utc)
+    )
     chat_sessions = relationship("ChatSesion", back_populates="user")
 
 

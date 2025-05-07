@@ -23,7 +23,7 @@ class User(Base):
     created_at: Mapped[datetime.datetime] = mapped_column(
         default=lambda: datetime.datetime.now(datetime.timezone.utc)
     )
-    chat_sessions = relationship("ChatSesion", back_populates="user")
+    chat_sessions = relationship("ChatSession", back_populates="user")
 
 
 class ChatSession(Base):
@@ -36,8 +36,8 @@ class ChatSession(Base):
     )
     finished_at: Mapped[datetime.datetime] = mapped_column()
 
-    user = relationship("User", back_populates="chat_sesions")
-    mensajes = relationship("ChatMessage", back_populates="session")
+    user = relationship("User", back_populates="chat_sessions")
+    messages = relationship("ChatMessage", back_populates="session")
 
 
 class ChatMessage(Base):
@@ -51,4 +51,4 @@ class ChatMessage(Base):
         default=lambda: datetime.datetime.now(datetime.timezone.utc)
     )
 
-    sesion = relationship("ChatSession", back_populates="messages")
+    session = relationship("ChatSession", back_populates="messages")

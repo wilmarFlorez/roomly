@@ -1,8 +1,11 @@
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Request, Response, Depends
 from fastapi.responses import JSONResponse
 from app.core.config import settings
-from app.services import whatsapp_service
+from app.services import whatsapp_service, user_service
 from app.services.whatsapp_client import send_whatsapp_message
+from app.database import get_db
+from sqlalchemy.orm import Session
+from app.schemas import UserCreate
 
 router = APIRouter()
 
@@ -24,7 +27,7 @@ async def verify_webhook(req: Request):
 
 
 @router.post("/webhook")
-async def receive_messages(req: Request):
+async def receive_messages(req: Request, db: Session = Depends(get_db)):
     data = await req.json()
     print("RECEIVE MESSAGE", data)
 
@@ -39,6 +42,13 @@ async def receive_messages(req: Request):
             from_number = message["from"]
             text = message["text"]["body"].strip().lower()
             print("TEXT", text)
+
+            # create user if doesn't exist - refactor this
+            existing_user = user_service.get_user_by_phone_number(from_number, db)
+            if not existing_user:
+                new_user_data = {"phone_number": from_number}
+                new_user = UserCreate(**new_user_data)
+                await user_service.create_user(new_user, db)
 
             response_text = whatsapp_service.proccess_message(text, from_number)
             await send_whatsapp_message(from_number, response_text)

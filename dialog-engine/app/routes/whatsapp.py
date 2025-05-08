@@ -26,7 +26,7 @@ async def verify_webhook(req: Request):
 @router.post("/webhook")
 async def receive_messages(req: Request):
     data = await req.json()
-    print("Data from whatsapp", data)
+    print("RECEIVE MESSAGE", data)
 
     try:
         entry = data["entry"][0]
@@ -38,10 +38,11 @@ async def receive_messages(req: Request):
             message = messages[0]
             from_number = message["from"]
             text = message["text"]["body"].strip().lower()
+            print("TEXT", text)
 
             response_text = whatsapp_service.proccess_message(text, from_number)
             await send_whatsapp_message(from_number, response_text)
-            print("TEXT", text)
+            print("MESSAGE SENT")
 
     except Exception as e:
         print("[ERROR] procesando el mensaje: ", e)

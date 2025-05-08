@@ -9,6 +9,7 @@ HEADERS = {
 }
 
 async def send_whatsapp_message(to: str, message: str):
+    print("SENDING MESSAGE")
     payload = {
         "messaging_product": "whatsapp",
         "recipient_type": "individual",

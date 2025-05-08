@@ -21,6 +21,7 @@ ACCOMMODATION = [
 
 
 def proccess_message(text: str, phone: str) -> str:
+    print("PROCESS MESSAGE")
     user_state = user_states.get(phone, {})
 
     if "step" not in user_state:

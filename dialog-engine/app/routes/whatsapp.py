@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, Response
 from fastapi.responses import JSONResponse
 from app.core.config import settings
-from app.services.whatsapp import proccess_message
+from app.services import whatsapp_service
 from app.services.whatsapp_client import send_whatsapp_message
 
 router = APIRouter()
@@ -39,7 +39,7 @@ async def receive_messages(req: Request):
             from_number = message["from"]
             text = message["text"]["body"].strip().lower()
 
-            response_text = proccess_message(text, from_number)
+            response_text = whatsapp_service.proccess_message(text, from_number)
             await send_whatsapp_message(from_number, response_text)
             print("TEXT", text)
 

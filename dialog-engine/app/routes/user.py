@@ -15,6 +15,6 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return user_service.create_user(user, db)
 
 
-@router.get("/{phone_id}", response_model=schemas.UserResponse)
-def get_user_by_phone_id(phone_id: str, db: Session = Depends(get_db)):
-    return user_service.get_user_by_phone_id(phone_id, db)
+@router.get("/{phone_number}", response_model=schemas.UserResponse)
+def get_user_by_phone_number(phone_number: str, db: Session = Depends(get_db)):
+    return user_service.get_user_by_phone_number(phone_number, db)

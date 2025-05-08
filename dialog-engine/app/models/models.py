@@ -18,7 +18,6 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=True)
     phone_number: Mapped[str] = mapped_column(String(50), unique=True)
-    phone_number_id: Mapped[str] = mapped_column(String(50), unique=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(
         default=lambda: datetime.datetime.now(datetime.timezone.utc)
